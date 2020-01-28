@@ -15,6 +15,7 @@ function (input, output, sesion){
   
   plot(ras[[1]])
   points(sp)
+  
   output$rasPlot <- renderPlot({
     plot(ras[[input$layer]])
   }, height = 400)
@@ -38,7 +39,7 @@ function (input, output, sesion){
     valdf 
   })
   
-  value  <- eventReactive(input$rasPlot_click$x,{
+  value <- eventReactive(input$rasPlot_click$x,{
     extract(ras,cellFromXY(ras, Coords()))
   })
   
@@ -48,15 +49,25 @@ function (input, output, sesion){
     if(input$filterCheckSav) {
       lines(1:nlayers(ras),savgol(value(),5), col = "red")
     }
-    if(input$filterCheckWhit) {
-      lines(1:nlayers(ras),whit2(value(),5), col = "green")
-    }
   })
+  
+  pal <- reactive({
+    colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"),
+                 values(ras[[input$layer_render]]),
+                 na.color = "transparent")
+  })
+    
   
   output$Map <- renderLeaflet({
     leaflet() %>% 
       setView(lng = sp@coords[1], lat = sp@coords[2], zoom = 6) %>% 
-      addProviderTiles("Esri.WorldImagery") 
+      addProviderTiles("Esri.WorldImagery") %>%
+      addRasterImage(ras[[input$layer_render]],
+                     opacity = 0.8,
+                     project = TRUE) %>%
+      addLegend(pal = pal(),
+                values = values(ras[[input$layer_render]]),
+                title = "Surface temp")
   })
   
   #output$Map <- renderLeaflet({

@@ -5,3 +5,4 @@
     + Dự kiến: có thể làm về Filter Golay và tính ảnh chỉ số TVDI
 + Đợt 2:
     + Như trên
+    + Hiển thị trên Basemap ảnh Raster theo thời gian

@@ -13,8 +13,8 @@ dashboardPage(
   ),
   dashboardSidebar(
     h4("Filter:"),
-    checkboxInput("filterCheckSav", "Savitzky-Golay", value = FALSE),
-    checkboxInput("filterCheckWhit", "Whittaker", value = FALSE)
+    actionButton("filterCheckSav", "Savitzky-Golay")
+    # checkboxInput("filterCheckWhit", "Whittaker", value = FALSE)
   ),
 
   dashboardBody(
@@ -30,7 +30,13 @@ dashboardPage(
                              max = nlayers(ras), 1, 
                              width="100%"),
                  dateRangeInput("dates", h3("Date range"))),
-        tabPanel("Basemap", leafletOutput("Map", width = "100%", height = 700))
+        tabPanel("Basemap", 
+                 leafletOutput("Map", width = "100%", height = 700),
+                 sliderInput("layer_render", 
+                             "Plot Timestep", 
+                             min = 1, 
+                             max = nlayers(ras), 1, 
+                             width="100%"))
       ),
       
       box(
