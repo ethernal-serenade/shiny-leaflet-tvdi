@@ -4,6 +4,8 @@ library(shinydashboard)
 library(rgdal)
 library(raster)
 
+ras <- stack(list.files("data", full.names = TRUE, pattern = "*.tif$"))
+
 dashboardPage(
   dashboardHeader(
     title = "R Gis - Raster Time Series Analysis",
@@ -11,7 +13,8 @@ dashboardPage(
   ),
   dashboardSidebar(
     h4("Filter:"),
-    checkboxInput("filterCheckSav", "Savitzky-Golay", value = FALSE)
+    checkboxInput("filterCheckSav", "Savitzky-Golay", value = FALSE),
+    checkboxInput("filterCheckWhit", "Whittaker", value = FALSE)
   ),
 
   dashboardBody(

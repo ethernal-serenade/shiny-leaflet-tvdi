@@ -4,7 +4,7 @@ library(shinydashboard)
 library(rgdal)
 library(raster)
 
-ras <- stack(list.files("data", full.names=T, pattern = "*.tif$"))
+ras <- stack(list.files("data", full.names = TRUE, pattern = "*.tif$"))
 
 function (input, output, sesion){
   xBase <- (extent(ras)[2] + extent(ras)[1]) / 2
@@ -40,6 +40,17 @@ function (input, output, sesion){
   
   value  <- eventReactive(input$rasPlot_click$x,{
     extract(ras,cellFromXY(ras, Coords()))
+  })
+  
+  output$TSplot <- renderPlot({
+    req(input$rasPlot_click$x)
+    plot(1:nlayers(ras),value(), type = "l", xlab = "Time", ylab = "Values")
+    if(input$filterCheckSav) {
+      lines(1:nlayers(ras),savgol(value(),5), col = "red")
+    }
+    if(input$filterCheckWhit) {
+      lines(1:nlayers(ras),whit2(value(),5), col = "green")
+    }
   })
   
   output$Map <- renderLeaflet({
